@@ -35,14 +35,6 @@ position: relative;
 top: ${props => props.position + 'px' || '0px'};
 
 `
-export const LavaHorizontalBlock = styled.div` 
-min-width:20px;
-min-height:20px;
-background-color: red;
-position: relative;
-right: ${props => props.position + 'px' || '0px'}
-
-`
 export const LavaVerticalBlock = styled.div` 
 min-width:20px;
 min-height:20px;
@@ -50,7 +42,9 @@ background-color: red;
 position: relative;
 top: ${props => props.position + 'px' || '0px'}
 `
-export const LavaDrippingBlock = styled.div` 
+export const LavaDrippingBlock = styled.div.attrs({
+  className: 'lavaDripping',
+  })` 
 min-width:20px;
 min-height:20px;
 background-color: red;
