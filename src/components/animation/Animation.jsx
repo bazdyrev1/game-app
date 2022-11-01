@@ -10,7 +10,7 @@ const useAnimationFrame = (callback) => {
         callback(deltaTime)
       }
       previousTimeRef.current = time;
-      requestRef.current = requestAnimationFrame(animate);
+      requestRef.current      = requestAnimationFrame(animate);
     }
     
     useEffect(() => {
