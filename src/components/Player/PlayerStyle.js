@@ -8,6 +8,6 @@ export const PlayerBlock = styled.div`
   min-height      : 20px;
   background-color: black;
   position: relative;
-  top: ${props => props.position + 'px' || '0px'};
-  /* left: ${props => props.position.y + 'px' || '0px'}; */
+  top: ${props => props.position.posX + 'px' || '0px'};
+  left: ${props => props.position.posY + 'px' || '0px'};
 `

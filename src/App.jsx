@@ -25,20 +25,26 @@ function App() {
         lavaPosition.push({x:width, y: height, id: index})
       }
       if(item === '@'){
-        const width  = (index+1) * 20;
-        const height = y*20;
-        playerStartPosition= {x:width, y: height, id: index}
+        const width               = (index+1) * 20;
+        const height              = y*20;
+        playerStartPosition       = {x:width, y: height, id: index}
       }
     })
   })
-  
+  const followButtons = (data) => {
+    return data
+  }
+  window.addEventListener('keydown', e => {
+    followButtons(e)
+})
   return (
     <div className="App">
      <RenderLevel 
-      gameLevel    = {gameLevel}
-      lavaPosition = {lavaPosition}
-      wallPosition = {wallPosition}
-      playerStartPosition={playerStartPosition}
+      gameLevel           = {gameLevel}
+      lavaPosition        = {lavaPosition}
+      wallPosition        = {wallPosition}
+      playerStartPosition = {playerStartPosition}
+      folowButtons        = {followButtons}
       />
     </div>
   );

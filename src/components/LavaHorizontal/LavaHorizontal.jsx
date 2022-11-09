@@ -8,7 +8,7 @@ const LavaHorizontal = ({
   wallPosition,
   setArithmetic
 }) => {
-  let   currPos            = lavaPosition.y - position.pos;
+  let currPos = lavaPosition.y - position.pos;
   const stonesOnTheCurrRow = [lavaPosition];
 
   wallPosition.forEach(item => {
@@ -23,22 +23,25 @@ const LavaHorizontal = ({
 
   useEffect(() => {
     const indexLava = stonesOnTheCurrRow.findIndex(el => el.y === lavaPosition.y);
+
     if (currPos <= stonesOnTheCurrRow[indexLava - 1].y + 24) {
-      setArithmetic(prevState =>
-        prevState.map(item => {
+      setArithmetic(prevState => ({
+        ...prevState,
+        lava: prevState.lava.map(item => {
           if (item.id === position.id) {
             return {
               ...position,
               direction: 0
             }
-          }
+          };
           return item;
         }),
-      );
+      }))
     };
     if (currPos >= stonesOnTheCurrRow[indexLava + 1].y - 24) {
-      setArithmetic(prevState =>
-        prevState.map(item => {
+      setArithmetic(prevState => ({
+        ...prevState,
+        lava: prevState.lava.map(item => {
           if (item.id === position.id) {
             return {
               ...position,
@@ -47,10 +50,10 @@ const LavaHorizontal = ({
           };
           return item;
         }),
-      );
+      }))
     };
   }, [currPos]);
- 
+
   return (
     <Wrapper position={position.pos} />
   );

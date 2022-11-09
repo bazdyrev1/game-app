@@ -1,5 +1,9 @@
 import React, { useState, useRef, useCallback } from "react";
+
 import useAnimationFrame from '../animation/Animation'
+import UserBlock from '../Player/Player'
+import LavaHorizontal from "../LavaHorizontal/LavaHorizontal";
+
 import { CoinBlock,
  EmptyBlock, 
  LavaDrippingBlock, 
@@ -9,10 +13,8 @@ import { CoinBlock,
  WallBlock, 
  Wrapper 
 } from "./style";
-import UserBlock from '../Player/Player'
-import LavaHorizontal from "../LavaHorizontal/LavaHorizontal";
 
-const RenderLevel = ({ gameLevel, lavaPosition, wallPosition }) => {
+const RenderLevel = ({ gameLevel, lavaPosition, wallPosition, playerStartPosition, folloButtons }) => {
   const [position, setPosition] = useState({
     coin          : 5,
     lavaDripping  : 0,
@@ -25,22 +27,45 @@ const RenderLevel = ({ gameLevel, lavaPosition, wallPosition }) => {
         'direction': 1,
       }
     }),
-    player: 0,
+    player: {...playerStartPosition, posX: 0, posY: 0, direction: {x: 0, y: 0}, action: 0},
   })
 
-  const initialValues = position.lavaHorizontal.map(item => {
+  const initialValuesLava = position.lavaHorizontal.map(item => {
     return {
       ...item,
       direction: 1,
     }
   })
+  const intialValuePlayer = position.player;
 
-  const [arithmetic, setArithmetic] = useState(initialValues);
+  const [arithmetic, setArithmetic] = useState({lava: initialValuesLava, player: intialValuePlayer});
   const ref                         = useRef();
 
   let angle    = 0;
   let lastTime = null;
 
+  // console.log(arithmetic.player)
+  const motionControllerHorizontal = (player, prevSatePlayer, deltaTime ) => {
+    if((player.direction.y === 0) && player.action){
+     return  prevSatePlayer.posY - deltaTime * 0.04 
+    }
+    
+    if((player.direction.y === 1) && player.action){
+      return  prevSatePlayer.posY + deltaTime * 0.04 
+     }
+     return prevSatePlayer.posY
+  };
+  const motionControllerVertical = (player, prevSatePlayer, deltaTime ) => {
+    if((player.direction.x === 1) && player.action){
+     return  prevSatePlayer.posX + deltaTime * 0.06 
+    }
+    
+    if((player.direction.x === 0) && player.action){
+      return prevSatePlayer.posX - deltaTime * 0.5
+     }
+     return prevSatePlayer.posX
+  }
+  // console.log(arithmetic.player)
   useAnimationFrame(
     useCallback((deltaTime) => {
       if (lastTime != null) angle += deltaTime * 0.009;
@@ -53,18 +78,21 @@ const RenderLevel = ({ gameLevel, lavaPosition, wallPosition }) => {
         lavaVertical  : (Math.sin(angle) * 5),
         lavaHorizontal: prevState.lavaHorizontal.map(item => {
           let permission = false;
-          arithmetic.forEach(item1 => {
+          arithmetic.lava.forEach(item1 => {
             if (item1.id === item.id) {
               item1.direction ? permission = true : permission = false;
             }
           })
-
           return {
             ...item,
             'pos': permission ? item.pos + deltaTime * 0.04: item.pos - deltaTime * 0.04
           }
         }),
-        player: ((prevState.player + deltaTime * 0.01) % 100)
+        player: {
+          ...prevState.player,
+          posX: motionControllerVertical(arithmetic.player, prevState.player, deltaTime),
+          posY: motionControllerHorizontal(arithmetic.player, prevState.player, deltaTime)
+        },
       })
       ))
     }, [arithmetic])
@@ -87,10 +115,11 @@ const RenderLevel = ({ gameLevel, lavaPosition, wallPosition }) => {
                 return (
                   <UserBlock 
                     key={index} 
-                    position      = {position.player}
+                    position= {position.player}
+                    wallPosition  = {wallPosition}
+                    setArithmetic = {setArithmetic}
                   />
                 )
-        
               } else if (item === "o") {
                 return <CoinBlock key={index} position={position.coin} />;
               } else if (item === "=") {
