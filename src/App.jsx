@@ -31,12 +31,7 @@ function App() {
       }
     })
   })
-  const followButtons = (data) => {
-    return data
-  }
-  window.addEventListener('keydown', e => {
-    followButtons(e)
-})
+ 
   return (
     <div className="App">
      <RenderLevel 
@@ -44,7 +39,6 @@ function App() {
       lavaPosition        = {lavaPosition}
       wallPosition        = {wallPosition}
       playerStartPosition = {playerStartPosition}
-      folowButtons        = {followButtons}
       />
     </div>
   );
