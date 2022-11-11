@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 import { usePressKey } from '../hooks/useKeyPress'
 
 import { Wrapper, PlayerBlock } from './PlayerStyle'
 
-const Player = ({ position, setArithmetic, wallPosition }) => {
+const Player = ({ position, setPosition, wallPosition, refData }) => {
     const handleButtonPress = usePressKey();
-
+   
     const currPosition = {
         x: position.x + position.posX, //может нужен +
         y: position.y + position.posY,
@@ -55,12 +55,14 @@ const Player = ({ position, setArithmetic, wallPosition }) => {
         };
         const roundingPositionY = Math.ceil(currPosition.y);
         const roundingPositionX = Math.ceil(currPosition.x);
+        
+
         if (handleButtonPress.left) {
             if (
                 (roundingPositionX < stonesOnTheCurrWay.y[indexPlayer?.y + 1]?.x - 23 ?? 1)
             ) {
                 if (roundingPositionY - 20 >= stonesOnTheCurrWay.x[indexPlayer.x - 1]?.y ?? 0) {
-                    setArithmetic(prevState => ({
+                    setPosition(prevState => ({
                         ...prevState,
                         player: {
                             ...prevState.player,
@@ -69,7 +71,7 @@ const Player = ({ position, setArithmetic, wallPosition }) => {
                         }
                     }))
                 } else {
-                    setArithmetic(prevState => ({
+                    setPosition(prevState => ({
                         ...prevState,
                         player: {
                             ...prevState.player,
@@ -80,7 +82,7 @@ const Player = ({ position, setArithmetic, wallPosition }) => {
                 }
             }
             else if (roundingPositionY - 20 > stonesOnTheCurrWay.x[indexPlayer.x - 1]?.y ?? 20) {
-                setArithmetic(prevState => ({
+                setPosition(prevState => ({
                     ...prevState,
                     player: {
                         ...prevState.player,
@@ -89,7 +91,7 @@ const Player = ({ position, setArithmetic, wallPosition }) => {
                     }
                 }))
             } else {
-                setArithmetic(prevState => ({
+                setPosition(prevState => ({
                     ...prevState,
                     player: {
                         ...prevState.player,
@@ -105,7 +107,7 @@ const Player = ({ position, setArithmetic, wallPosition }) => {
                 (roundingPositionX < stonesOnTheCurrWay.y[indexPlayer?.y + 1]?.x - 23 ?? 1)
             ) {
                 if (roundingPositionY < stonesOnTheCurrWay.x[indexPlayer.x + 1].y - 22) {
-                    setArithmetic(prevState => ({
+                    setPosition(prevState => ({
                         ...prevState,
                         player: {
                             ...prevState.player,
@@ -114,7 +116,7 @@ const Player = ({ position, setArithmetic, wallPosition }) => {
                         }
                     }))
                 } else {
-                    setArithmetic(prevState => ({
+                    setPosition(prevState => ({
                         ...prevState,
                         player: {
                             ...prevState.player,
@@ -125,7 +127,7 @@ const Player = ({ position, setArithmetic, wallPosition }) => {
                 }
             }
             else if (roundingPositionY < stonesOnTheCurrWay.x[indexPlayer.x + 1].y - 22) {
-                setArithmetic(prevState => ({
+                setPosition(prevState => ({
                     ...prevState,
                     player: {
                         ...prevState.player,
@@ -134,7 +136,7 @@ const Player = ({ position, setArithmetic, wallPosition }) => {
                     }
                 }))
             } else {
-                setArithmetic(prevState => ({
+                setPosition(prevState => ({
                     ...prevState,
                     player: {
                         ...prevState.player,
@@ -146,9 +148,8 @@ const Player = ({ position, setArithmetic, wallPosition }) => {
         }
         if (handleButtonPress.up) {
             const borderJumping = stonesOnTheCurrWay.y[indexPlayer?.y - 1]?.x ?? 0;
-            console.log(borderJumping, roundingPositionX)
-            if (roundingPositionX <= borderJumping + 20) {
-                setArithmetic(prevState => ({
+            if (roundingPositionX < borderJumping + 20) {
+                setPosition(prevState => ({
                     ...prevState,
                     player: {
                         ...prevState.player,
@@ -158,11 +159,11 @@ const Player = ({ position, setArithmetic, wallPosition }) => {
                 }))
             }
             else if (
-                (roundingPositionX >= stonesOnTheCurrWay.y[indexPlayer?.y + 1]?.x - 25 ?? 1)
+                (roundingPositionX >= stonesOnTheCurrWay.y[indexPlayer?.y + 1]?.x - 22 ?? 1)
                 &&
-                (roundingPositionX <= stonesOnTheCurrWay.y[indexPlayer?.y + 1]?.x + 25 ?? 1)) {
+                (roundingPositionX <= stonesOnTheCurrWay.y[indexPlayer?.y + 1]?.x + 22 ?? 1)) {
                 if (handleButtonPress.up && handleButtonPress.left) {
-                    setArithmetic(prevState => ({
+                    setPosition(prevState => ({
                         ...prevState,
                         player: {
                             ...prevState.player,
@@ -172,7 +173,7 @@ const Player = ({ position, setArithmetic, wallPosition }) => {
                     }))
                 }
                 else if (handleButtonPress.up && handleButtonPress.right) {
-                    setArithmetic(prevState => ({
+                    setPosition(prevState => ({
                         ...prevState,
                         player: {
                             ...prevState.player,
@@ -182,7 +183,7 @@ const Player = ({ position, setArithmetic, wallPosition }) => {
                     }))
                 }
                 else if (roundingPositionX > borderJumping + 30) {
-                    setArithmetic(prevState => ({
+                    setPosition(prevState => ({
                         ...prevState,
                         player: {
                             ...prevState.player,
@@ -193,7 +194,7 @@ const Player = ({ position, setArithmetic, wallPosition }) => {
                 }
             }
             else {
-                setArithmetic(prevState => ({
+                setPosition(prevState => ({
                     ...prevState,
                     player: {
                         ...prevState.player,
@@ -206,7 +207,7 @@ const Player = ({ position, setArithmetic, wallPosition }) => {
         }
         if ((handleButtonPress.up || handleButtonPress.right || handleButtonPress.left) === false) {
             if (roundingPositionX >= stonesOnTheCurrWay.y[indexPlayer.y + 1].x - 24) {
-                setArithmetic(prevState => ({
+                setPosition(prevState => ({
                     ...prevState,
                     player: {
                         ...prevState.player,
@@ -216,7 +217,7 @@ const Player = ({ position, setArithmetic, wallPosition }) => {
                 }));
             }
             else if (roundingPositionX < stonesOnTheCurrWay.y[indexPlayer.y + 1].x - 20) {
-                setArithmetic(prevState => ({
+                setPosition(prevState => ({
                     ...prevState,
                     player: {
                         ...prevState.player,
@@ -227,7 +228,7 @@ const Player = ({ position, setArithmetic, wallPosition }) => {
             }
         }
         
-    }, [position])
+    }, [refData])
 
     return (
         <Wrapper>

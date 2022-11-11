@@ -10,13 +10,12 @@ export const motionControllerHorizontal = (player, prevSatePlayer, deltaTime ) =
   };
   
 export const motionControllerVertical = (player, prevSatePlayer, deltaTime ) => {
-    console.log('work')
     if((player.direction.x === 1) && player.action){
      return  prevSatePlayer.posX + deltaTime * 0.06 
     }
     
     if((player.direction.x === 0) && player.action){
-      return prevSatePlayer.posX - deltaTime * 0.4
+      return prevSatePlayer.posX - deltaTime 
      }
      return prevSatePlayer.posX
   }
