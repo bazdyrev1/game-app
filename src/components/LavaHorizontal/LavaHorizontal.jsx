@@ -8,7 +8,7 @@ const LavaHorizontal = ({
   wallPosition,
   setPosition
 }) => {
-
+  // console.log(position)
   let currPos = lavaPosition.y - position.pos;
   const stonesOnTheCurrRow = [lavaPosition];
 

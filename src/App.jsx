@@ -14,19 +14,31 @@ function App() {
     let   y   = 0;
     row.forEach(item => {
       y = y + 1;
-      if(item === '#'){
-        const width  = (index+1) * 20;
+      const width  = (index+1) * 20;
         const height = y*20;
+      if(item === '#'){
+        
         wallPosition.push({x:width, y: height})
       }
       if(item === '='){
-        const width  = (index+1) * 20;
-        const height = y*20;
-        lavaPosition.push({x:width, y: height, id: index})
+        // const width  = (index+1) * 20;
+        // const height = y*20;
+        lavaPosition.push({x:width, y: height, id: index, type: 'horizontal', 'pos': 0,
+        'direction': 1,})
+      }
+      if(item === '+'){
+        // const width  = (index+1) * 20;
+        // const height = y*20;
+        lavaPosition.push({x:width, y: height, id: index, type: 'static'})
+      }
+      if(item === 'v'){
+        // const width  = (index+1) * 20;
+        // const height = y*20;
+        lavaPosition.push({x:width, y: height, id: index, type: 'dripping', 'pos': 0,})
       }
       if(item === '@'){
-        const width               = (index+1) * 20;
-        const height              = y*20;
+        // const width               = (index+1) * 20;
+        // const height              = y*20;
         playerStartPosition       = {x:width, y: height, id: index}
       }
     })

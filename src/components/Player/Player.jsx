@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 
 import { usePressKey } from '../hooks/useKeyPress'
 
@@ -56,7 +56,6 @@ const Player = ({ position, setPosition, wallPosition, refData }) => {
         const roundingPositionY = Math.ceil(currPosition.y);
         const roundingPositionX = Math.ceil(currPosition.x);
         
-
         if (handleButtonPress.left) {
             if (
                 (roundingPositionX < stonesOnTheCurrWay.y[indexPlayer?.y + 1]?.x - 23 ?? 1)

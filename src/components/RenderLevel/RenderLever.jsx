@@ -2,8 +2,10 @@ import React, { useState, useCallback, useRef } from "react";
 
 import {
   motionControllerHorizontal,
-  motionControllerVertical
+  motionControllerVertical,
+  contactWithLava
 } from './suggestions'
+
 import useAnimationFrame from '../animation/Animation'
 import UserBlock from '../Player/Player'
 import LavaHorizontal from "../LavaHorizontal/LavaHorizontal";
@@ -22,32 +24,41 @@ import {
 const RenderLevel = ({ gameLevel, lavaPosition, wallPosition, playerStartPosition }) => {
   const [position, setPosition] = useState({
     coin: 5,
-    lavaDripping: 0,
+    lavaDripping: lavaPosition.filter(item => {
+      if(item.type === 'dripping'){
+        return item
+      }
+    }),
     lavaVertical: 0,
-    lavaHorizontal: lavaPosition.map(item => {
-
-      return {
-        ...item,
-        'pos': 0,
-        'direction': 1,
+    lavaHorizontal: lavaPosition.filter(item => {
+      if(item.type === 'horizontal'){
+        return item
+      }
+    }),
+    lavaStatic: lavaPosition.filter(item => {
+      if(item.type === 'static'){
+        return item
       }
     }),
     player: { ...playerStartPosition, posX: 0, posY: 0, direction: { x: 0, y: 0 }, action: 0 },
   })
-  
+
   const ref = useRef()
   let angle = 0;
   let lastTime = null;
 
   const main = useCallback((deltaTime) => {
-    
     angle += deltaTime * 0.009;
     lastTime = deltaTime;
 
     setPosition((prevState => ({
       ...prevState,
       coin: (Math.sin(angle) * 5),
-      lavaDripping: ((prevState.lavaDripping + deltaTime * 0.01) % 100),
+      lavaDripping: prevState.lavaDripping.map((item) => {
+        return {
+          ...item,
+          pos: (item.pos + deltaTime * 0.01) % 100,
+        }}),
       lavaVertical: (Math.sin(angle) * 5),
       lavaHorizontal: prevState.lavaHorizontal.map(item => {
         if (item.direction) {
@@ -72,7 +83,14 @@ const RenderLevel = ({ gameLevel, lavaPosition, wallPosition, playerStartPositio
     ))
 
   }, [position.player]);
+
   ref.current = position.player;
+
+  const gameOver = contactWithLava(position, lavaPosition)
+  if (gameOver){
+    main()
+  }
+  
   useAnimationFrame(main);
 
   return (
@@ -102,6 +120,7 @@ const RenderLevel = ({ gameLevel, lavaPosition, wallPosition, playerStartPositio
                 return <CoinBlock key={index} position={position.coin} />;
               } else if (item === "=") {
                 const currLavaPosition = position.lavaHorizontal.find(item => item.id === index1);
+                // console.log(position)
                 const startLavaPos = lavaPosition.find(item => item.id === index1)
 
                 return (
@@ -114,7 +133,7 @@ const RenderLevel = ({ gameLevel, lavaPosition, wallPosition, playerStartPositio
                   />
                 )
               } else if (item === "v") {
-                return <LavaDrippingBlock key={index} position={position.lavaDripping} />;
+                return <LavaDrippingBlock key={index} position={position.lavaDripping[0].pos} />;
               } else if (item === "|") {
                 return <LavaVerticalBlock className='lavaVertical' key={index} position={position.lavaVertical} />;
               }
